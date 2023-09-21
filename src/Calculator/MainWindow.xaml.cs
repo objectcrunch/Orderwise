@@ -206,7 +206,7 @@ public partial class MainWindow : Window
 
         _operationType = GetButtonContent(e);
 
-        var result = _operationProvider.Calculate(_operationType, _leftOperand);
+        var result = _operationProvider.Calculate(_operationType, _leftOperand!);
 
         if (result != null)
         {
@@ -224,7 +224,7 @@ public partial class MainWindow : Window
 
             var operand = CloseADot(Model.Result);
 
-            var result = _operationProvider.Calculate(_operationType!, operand);
+            var result = _operationProvider.Calculate(_operationType!, operand!);
 
             if (result != null)
             {
@@ -255,7 +255,7 @@ public partial class MainWindow : Window
         if (getRequiredOperandsCount == 1)
         {
             _leftOperand = CloseADot(_leftOperand);
-            var result = _operationProvider.Calculate(_operationType, _leftOperand);
+            var result = _operationProvider.Calculate(_operationType, _leftOperand!);
 
             if (result != null)
             {
