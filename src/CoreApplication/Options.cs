@@ -1,7 +1,6 @@
-﻿namespace CoreApplication
+﻿namespace CoreApplication;
+
+public class Options
 {
-    public class Options
-    {
-        public int OperandSizeLimit {  get; set; }
-    }
+    public int OperandSizeLimit {  get; set; }
 }

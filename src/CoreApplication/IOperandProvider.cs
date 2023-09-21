@@ -1,11 +1,10 @@
-﻿namespace CoreApplication
+﻿namespace CoreApplication;
+
+public interface IOperandProvider
 {
-    public interface IOperandProvider
-    {
-        int Count { get; }
-        bool PushEntry(string value);
-        string? GetOperand();
-        bool TryClearLastEntry(out string? lastEntry);
-        void ClearOperand();
-    }
+    int Count { get; }
+    bool PushEntry(string value);
+    string? GetOperand();
+    bool TryClearLastEntry(out string? lastEntry);
+    void ClearOperand();
 }

@@ -1,11 +1,10 @@
-﻿namespace CoreApplication
-{
-    public interface IMemoryProvider<T>
-    {
-        int Count { get; }
+﻿namespace CoreApplication;
 
-        void Clear();
-        T? Get();
-        void Store(T value);
-    }
+public interface IMemoryProvider<T>
+{
+    int Count { get; }
+
+    void Clear();
+    T? Get();
+    void Store(T value);
 }

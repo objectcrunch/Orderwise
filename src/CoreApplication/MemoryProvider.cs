@@ -1,35 +1,34 @@
-﻿namespace CoreApplication
+﻿namespace CoreApplication;
+
+public class MemoryProvider<T> : IMemoryProvider<T>
 {
-    public class MemoryProvider<T> : IMemoryProvider<T>
+    private readonly T[] _values;
+    public int Count => _values.Length;
+
+    public MemoryProvider()
     {
-        private readonly T[] _values;
-        public int Count => _values.Length;
+        _values = new T[1];
+    }
 
-        public MemoryProvider()
+    public void Clear()
+    {
+        if (Count > 0)
         {
-            _values = new T[1];
+            Array.Clear(_values, 0, _values.Length);
         }
+    }
 
-        public void Clear()
+    public T? Get()
+    {
+        if (Count > 0)
         {
-            if (Count > 0)
-            {
-                Array.Clear(_values, 0, _values.Length);
-            }
+            return _values[0];
         }
+        return default;
+    }
 
-        public T? Get()
-        {
-            if (Count > 0)
-            {
-                return _values[0];
-            }
-            return default;
-        }
-
-        public void Store(T value)
-        {
-            _values[0] = value;
-        }
+    public void Store(T value)
+    {
+        _values[0] = value;
     }
 }
