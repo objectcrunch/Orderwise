@@ -1,0 +1,119 @@
+﻿<Window x:Class="Calculator.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Calculator"
+        mc:Ignorable="d"
+        Title="Calculator" Height="600" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"></ColumnDefinition>
+            <ColumnDefinition Width="600"></ColumnDefinition>
+            <ColumnDefinition Width="50"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition Height="30"></RowDefinition>
+            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition Height="150"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Label FontSize="20" 
+               Width="Auto" 
+               HorizontalContentAlignment="Center"  
+               VerticalContentAlignment="Center" 
+               Grid.Column="1">
+            Standard Calculator
+        </Label>
+        <Label FontSize="12"
+               Width="Auto"
+               HorizontalContentAlignment="Right"
+               VerticalContentAlignment="Bottom"
+               Grid.Column="1"
+               Grid.Row="1"
+                Content="{ Binding Path=OperationDetail, UpdateSourceTrigger=PropertyChanged }">
+        </Label>
+        <Label FontSize="20"
+               Width="Auto"
+               HorizontalContentAlignment="Right"
+               VerticalContentAlignment="Bottom"
+               Grid.Column="1"
+               Grid.Row="2"
+               Content="{ Binding Path=Result, UpdateSourceTrigger=PropertyChanged }">            
+        </Label>
+
+        <Button Grid.Column="1" Grid.Row="3" Margin="0,49,465,54" Content="%" Click="PerformSingleOperandOperation" />
+        <Button Grid.Column="1" Grid.Row="3" Margin="153,49,312,54" Content="CE" Click="ClearInput"/>
+        <Button Grid.Column="1" Grid.Row="3" Margin="309,49,156,54" Content="C" Click="ClearOperation"/>
+        <Button Grid.Column="1" Grid.Row="3" Margin="464,49,1,54" Content="←" Click="ClearLastInputItem"/>
+
+        <Button Grid.Column="1" Grid.Row="3" Margin="0,103,465,0" Content="1/x" Click="PerformSingleOperandOperation"/>
+        <Button Grid.Column="1" Grid.Row="3" Margin="153,103,312,0" Content="x²" Click="PerformSingleOperandOperation"/>
+        <Button Grid.Column="1" Grid.Row="3" Margin="309,103,156,0" Content="√" Click="PerformSingleOperandOperation"/>
+        <Button Grid.Column="1" Grid.Row="3" Margin="464,103,1,0" Content="÷" Click="GetBiOperation"/>
+
+
+        <Button Grid.Column="1" Grid.Row="3" Margin="0,161,465,-59" Content="7" Click="GetOperand"/>
+        <Button Grid.Column="1" Grid.Row="3" Margin="153,161,312,-59" Content="8" Click="GetOperand"/>
+        <Button Grid.Column="1" Grid.Row="3" Margin="309,161,156,-59" Content="9" Click="GetOperand"/>
+        <Button Grid.Column="1" Grid.Row="3" Margin="464,161,1,-59" Content="X" Click="GetBiOperation"/>
+
+        <Button Grid.Column="1" Grid.Row="3" Margin="0,224,465,-121" Content="4" Click="GetOperand"/>
+        <Button Grid.Column="1" Grid.Row="3" Margin="153,224,312,-121" Content="5" Click="GetOperand"/>
+        <Button Grid.Column="1" Grid.Row="3" Margin="309,224,156,-121" Content="6" Click="GetOperand"/>
+        <Button Grid.Column="1" Grid.Row="3" Margin="464,224,1,-121" Content="-" Click="GetBiOperation"/>
+
+        <Button Grid.Column="1" Grid.Row="3" Margin="0,280,465,-177" Content="1" Click="GetOperand"/>
+        <Button Grid.Column="1" Grid.Row="3" Margin="153,280,312,-177" Content="2" Click="GetOperand"/>
+        <Button Grid.Column="1" Grid.Row="3" Margin="309,280,156,-177" Content="3" Click="GetOperand"/>
+        <Button Grid.Column="1" Grid.Row="3" Margin="464,280,1,-177" Content="+" Click="GetBiOperation"/>
+
+        <Button Grid.Column="1" Grid.Row="3" Margin="0,335,465,-232" Content="±" Click="NegateEntry"/>
+        <Button Grid.Column="1" Grid.Row="3" Margin="153,335,312,-232" Content="0" Click="GetOperand"/>
+        <Button Grid.Column="1" Grid.Row="3" Margin="309,335,156,-232" Content="." Click="GetDecimal"/>
+        <Button Grid.Column="1" Grid.Row="3" Margin="464,335,1,-232" Content="=" Background="MediumPurple" Click="PerformOperation"/>
+
+        <Button Grid.Column="1" 
+                Content="MC" 
+                HorizontalAlignment="Left" Grid.Row="3" 
+                VerticalAlignment="Top" 
+                Height="34" 
+                Width="43" 
+                Margin="0,6,0,0"
+                IsEnabled="{Binding MemoryClearDisabled}" 
+                Click="ClearMemory" />
+        
+        <Button Grid.Column="1" 
+            Content="MR" 
+            HorizontalAlignment="Left" 
+            Margin="53,6,0,0" Grid.Row="3" 
+            VerticalAlignment="Top" 
+            Height="34" 
+            Width="43"
+            IsEnabled="{Binding MemoryRecallDisabled}"
+            Click="RecallMemory"/>
+        
+        <Button Grid.Column="1" 
+            Content="M+" 
+            HorizontalAlignment="Left" 
+            Margin="106,6,0,0" Grid.Row="3" 
+            VerticalAlignment="Top" 
+            Height="34" Width="43" Click="AddToMemory"/>
+        
+        <Button Grid.Column="1" 
+            Content="M-" 
+            HorizontalAlignment="Left" 
+            Margin="159,6,0,0" Grid.Row="3" 
+            VerticalAlignment="Top" 
+            Height="34" Width="43" Click="SubtractFromMemory"/>
+        <Button Grid.Column="1" 
+            Content="MS" 
+            HorizontalAlignment="Left" 
+            Margin="213,6,0,0" Grid.Row="3" 
+            VerticalAlignment="Top" 
+            Height="34" Width="43" Click="Store"/>
+
+    </Grid>
+</Window>
