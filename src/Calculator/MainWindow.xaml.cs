@@ -17,6 +17,9 @@ public partial class MainWindow : Window
     private readonly IOperandProvider _operandProvider;
     private readonly IOperationProvider _operationProvider;
 
+    private static readonly string _dot = ".";
+    private static readonly string _zero = "0";
+        
     public MainWindow(
         IMemoryProvider<string> memory,
         IOperandProvider operandProvider,
@@ -32,21 +35,41 @@ public partial class MainWindow : Window
         _operationProvider = operationProvider;
     }
 
+    private void Store(object sender, RoutedEventArgs e)
+    {
+        if (Model.Result != null)
+        {
+            _memory.Store(Model.Result);
+            Model.MemoryClearEnabled = true;
+            Model.MemoryRecallEnabled = true;
+        }
+    }
+
     private void ClearMemory(object sender, RoutedEventArgs e)
     {
         _memory.Clear();
+        Model.MemoryClearEnabled = false;
+        Model.MemoryRecallEnabled = false;
     }
 
     private void RecallMemory(object sender, RoutedEventArgs e)
     {
-        Model.Result = _memory.Get();
+        var result = _memory.Get();
+
+        if (result != null)
+        {
+            ResetCalculator();
+
+            _operandProvider.PushEntry(result!);
+            Model.Result = result;
+        }
     }
 
     private void AddToMemory(object sender, RoutedEventArgs e)
     {
         if (Model.Result != null)
         {
-            var stored = _memory.Get();
+            var stored = _memory.Get() ?? _zero;
 
             if (stored != null)
             {
@@ -68,7 +91,7 @@ public partial class MainWindow : Window
     {
         if (Model.Result != null)
         {
-            var stored = _memory.Get();
+            var stored = _memory.Get() ?? _zero;
 
             if (stored != null)
             {
@@ -83,14 +106,6 @@ public partial class MainWindow : Window
                     _memory.Store(Model.Result);
                 }
             }
-        }
-    }
-
-    private void Store(object sender, RoutedEventArgs e)
-    {
-        if (Model.Result != null)
-        {
-            _memory.Store(Model.Result);
         }
     }
 
@@ -109,6 +124,28 @@ public partial class MainWindow : Window
         Model.Result = result;
     }
 
+    private void GetDecimal(object sender, RoutedEventArgs e)
+    {
+        if (_resultCaptured)
+        {
+            ResetCalculator();
+            _operandProvider.PushEntry(_zero);
+            _resultCaptured = false;
+            Model.OperationDetail = null;
+        }
+
+        if (Model.Result?.IndexOf(_dot) != -1)
+        {
+            return;
+        }
+
+        var content = GetButtonContent(e);
+
+        _operandProvider.PushEntry(content);
+        var result = _operandProvider.GetOperand();
+        Model.Result = result;
+    }
+    
     private void ClearLastInputItem(object sender, RoutedEventArgs e)
     {
         if (_resultCaptured)
@@ -121,46 +158,6 @@ public partial class MainWindow : Window
 
             var result = _operandProvider.GetOperand();
             Model.Result = result;
-        }
-    }
-
-    private void GetBiOperation(object sender, RoutedEventArgs e)
-    {
-        if (_leftOperand == null)
-        {
-            _leftOperand = _operandProvider.GetOperand();
-        }
-
-        if (_leftOperand == null)
-        {
-            return;
-        }
-
-        _operandProvider.ClearOperand();
-        Model.Result = _leftOperand;
-        _operationType = GetButtonContent(e);
-    }
-
-    private void PerformSingleOperandOperation(object sender, RoutedEventArgs e)
-    {
-        _leftOperand ??= _operandProvider.GetOperand();
-
-        if (_leftOperand == null)
-        {
-            return;
-        }
-
-        _operandProvider.ClearOperand();
-
-        _operationType = GetButtonContent(e);
-
-        var result = _operationProvider.Calculate(_operationType, _leftOperand);
-
-        if (result != null)
-        {
-            Model.Result = $"{result.Result}";
-            Model.OperationDetail = $"{result.OperationDetail}";
-            _resultCaptured = true;
         }
     }
 
@@ -178,13 +175,56 @@ public partial class MainWindow : Window
         }
     }
 
+    private void GetTwoOperandsOperationType(object sender, RoutedEventArgs e)
+    {
+        _leftOperand ??= _operandProvider.GetOperand();
+
+        if (_leftOperand == null)
+        {
+            return;
+        }
+
+        _operandProvider.ClearOperand();
+        Model.Result = _leftOperand;
+        _operationType = GetButtonContent(e);
+
+        Model.OperationDetail = $"{_leftOperand} {_operationType}";
+    }
+    
+    private void PerformSingleOperandOperation(object sender, RoutedEventArgs e)
+    {
+        _leftOperand ??= _operandProvider.GetOperand();
+
+        if (_leftOperand == null)
+        {
+            return;
+        }
+
+        _leftOperand = CloseADot(_leftOperand);
+
+        _operandProvider.ClearOperand();
+
+        _operationType = GetButtonContent(e);
+
+        var result = _operationProvider.Calculate(_operationType, _leftOperand);
+
+        if (result != null)
+        {
+            Model.Result = $"{result.Result}";
+            Model.OperationDetail = $"{result.OperationDetail}";
+            _resultCaptured = true;
+        }
+    }
+       
     private void NegateEntry(object sender, RoutedEventArgs e)
     {
         if (Model.Result != null)
         {
             _operationType = (e.Source as Button)!.Content.ToString();
 
-            var result = _operationProvider.Calculate(_operationType!, Model.Result);
+            var operand = CloseADot(Model.Result);
+
+            var result = _operationProvider.Calculate(_operationType!, operand);
 
             if (result != null)
             {
@@ -193,20 +233,8 @@ public partial class MainWindow : Window
             }
         }
     }
-
-    private void GetDecimal(object sender, RoutedEventArgs e)
-    {
-        if (_resultCaptured)
-        {
-            ResetCalculator();
-        }
-
-        var content = GetButtonContent(e);
-        _resultCaptured = true;
-        _operandProvider.PushEntry(content);
-    }
-
-    private void PerformOperation(object sender, RoutedEventArgs e)
+       
+    private void PerformTwoOperandsOperation(object sender, RoutedEventArgs e)
     {
         if (_operationType == null)
         {
@@ -226,6 +254,7 @@ public partial class MainWindow : Window
 
         if (getRequiredOperandsCount == 1)
         {
+            _leftOperand = CloseADot(_leftOperand);
             var result = _operationProvider.Calculate(_operationType, _leftOperand);
 
             if (result != null)
@@ -237,7 +266,10 @@ public partial class MainWindow : Window
         }
         else if (getRequiredOperandsCount == 2 && _rightOperand != null)
         {
-            var result = _operationProvider.Calculate(_operationType, _leftOperand, _rightOperand);
+            _leftOperand = CloseADot(_leftOperand);
+            _rightOperand = CloseADot(_rightOperand);
+
+            var result = _operationProvider.Calculate(_operationType, _leftOperand!, _rightOperand);
 
             if (result != null)
             {
@@ -247,9 +279,19 @@ public partial class MainWindow : Window
             }
         }
     }
-
+    
     private static string GetButtonContent(RoutedEventArgs e) => (e.Source as Button)!.Content!.ToString()!;
+    
+    private static string? CloseADot(string value)
+    {
+        if (value?.EndsWith(".") ?? false)
+        {
+            value += _zero;
+        }
 
+        return value;
+    }
+    
     private void ClearOperation(object sender, RoutedEventArgs e)
     {
         Model.Result = null;
@@ -258,6 +300,7 @@ public partial class MainWindow : Window
         _operationType = null;
         _operandProvider.ClearOperand();
     }
+    
     private void ResetCalculator()
     {
         Model.Result = null;

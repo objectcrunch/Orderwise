@@ -18,45 +18,31 @@ namespace Calculator
             }
         }
 
-        private string? _operation;
-        public string? Operation
+        private bool _memoryRecallEnabled;
+        public bool MemoryRecallEnabled
         {
             get
             {
-                return _operation;
+                return _memoryRecallEnabled;
             }
             set
             {
-                _operation = value;
-                NotifyPropertyChanged(nameof(Operation));
+                _memoryRecallEnabled = value;
+                NotifyPropertyChanged(nameof(MemoryRecallEnabled));
             }
         }
 
-        private bool _memoryRecallDisabled;
-        public bool MemoryRecallDisabled
+        private bool _memoryClearEnabled;
+        public bool MemoryClearEnabled
         {
             get
             {
-                return _memoryRecallDisabled;
+                return _memoryClearEnabled;
             }
             set
             {
-                _memoryRecallDisabled = value;
-                NotifyPropertyChanged(nameof(MemoryRecallDisabled));
-            }
-        }
-
-        private bool _memoryClearDisabled;
-        public bool MemoryClearDisabled
-        {
-            get
-            {
-                return _memoryClearDisabled;
-            }
-            set
-            {
-                _memoryClearDisabled = value;
-                NotifyPropertyChanged(nameof(MemoryClearDisabled));
+                _memoryClearEnabled = value;
+                NotifyPropertyChanged(nameof(MemoryClearEnabled));
             }
         }
 

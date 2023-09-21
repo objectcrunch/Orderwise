@@ -39,9 +39,9 @@ public class OperationProviderTest
     }
 
     [Theory]
-    [InlineData("2", "3", 6, "2 X 3 =")]
-    [InlineData("2", "-3", -6, "2 X -3 =")]
-    [InlineData("-2", "3", -6, "-2 X 3 =")]
+    [InlineData("2", "3", 6, "2 x 3 =")]
+    [InlineData("2", "-3", -6, "2 x -3 =")]
+    [InlineData("-2", "3", -6, "-2 x 3 =")]
     public void CalculateCanPerformMultiply(string left, string right, double sum, string detail)
     {
         // Arrange

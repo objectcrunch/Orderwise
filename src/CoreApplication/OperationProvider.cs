@@ -37,7 +37,7 @@ public class OperationProvider : IOperationProvider
         {
             ["+"] = new OperationContainer(Add, 2),
             ["-"] = new OperationContainer(Subtract, 2),
-            ["X"] = new OperationContainer(Multiply, 2),
+            ["x"] = new OperationContainer(Multiply, 2),
             ["÷"] = new OperationContainer(Divide, 2),
             ["x²"] = new OperationContainer(Square, 1),
             ["√"] = new OperationContainer(SquareRoot, 1),
@@ -115,7 +115,7 @@ public class OperationProvider : IOperationProvider
         return new OperationResultContainer
         {
             Result = result,
-            OperationDetail = $"{left} X {right} ="
+            OperationDetail = $"{left} x {right} ="
         };
     }
 
