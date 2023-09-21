@@ -111,7 +111,7 @@ public partial class MainWindow : Window
 
     private void GetOperand(object sender, RoutedEventArgs e)
     {
-        if (_resultCaptured)
+        if (_resultCaptured && _operationType == null)
         {
             ResetCalculator();
             _resultCaptured = false;
@@ -177,7 +177,7 @@ public partial class MainWindow : Window
 
     private void GetTwoOperandsOperationType(object sender, RoutedEventArgs e)
     {
-        _leftOperand ??= _operandProvider.GetOperand();
+        _leftOperand = Model.Result ?? _operandProvider.GetOperand();
 
         if (_leftOperand == null)
         {
@@ -210,6 +210,7 @@ public partial class MainWindow : Window
 
         if (result != null)
         {
+            _operationType = null;
             Model.Result = $"{result.Result}";
             Model.OperationDetail = $"{result.OperationDetail}";
             _resultCaptured = true;
@@ -219,17 +220,33 @@ public partial class MainWindow : Window
     private void NegateEntry(object sender, RoutedEventArgs e)
     {
         if (Model.Result != null)
-        {
-            _operationType = (e.Source as Button)!.Content.ToString();
+        {          
+            var negattionOperationType = (e.Source as Button)!.Content.ToString();
 
             var operand = CloseADot(Model.Result);
 
-            var result = _operationProvider.Calculate(_operationType!, operand!);
+            var result = _operationProvider.Calculate(negattionOperationType!, operand!);
 
             if (result != null)
             {
-                Model.Result = $"{result.Result}";
-                Model.OperationDetail = $"{result.OperationDetail}";
+                var operationResult = $"{result.Result}";
+
+                Model.Result = operationResult;
+                //Model.OperationDetail = $"{result.OperationDetail}";
+
+                _operandProvider.ClearOperand();
+
+                _operandProvider.PushEntry(operationResult);               
+                Model.Result = operationResult;
+
+                _resultCaptured = false;
+
+                if(_operationType == null)
+                {
+                    _leftOperand = operationResult;
+                }
+
+                //_rightOperand = null;
             }
         }
     }
@@ -259,6 +276,7 @@ public partial class MainWindow : Window
 
             if (result != null)
             {
+                _operationType = null;
                 Model.Result = $"{result.Result}";
                 Model.OperationDetail = $"{result.OperationDetail}";
                 _resultCaptured = true;
@@ -273,6 +291,7 @@ public partial class MainWindow : Window
 
             if (result != null)
             {
+                _operationType = null;
                 Model.Result = $"{result.Result}";
                 Model.OperationDetail = $"{result.OperationDetail}";
                 _resultCaptured = true;
@@ -297,7 +316,6 @@ public partial class MainWindow : Window
         Model.Result = null;
         _leftOperand = null;
         _rightOperand = null;
-        _operationType = null;
         _operandProvider.ClearOperand();
     }
     
@@ -306,7 +324,6 @@ public partial class MainWindow : Window
         Model.Result = null;
         _leftOperand = null;
         _rightOperand = null;
-        _operationType = null;
         _operandProvider.ClearOperand();
     }
 }
