@@ -8,9 +8,9 @@
 <img src="Resources/calculator.png" width="400">
 
 <br />
+
 The solution include the release assets inside the `release.zip` which can be run by step `2` below.
 
-<br/>
 To build and run the project, open a command prompt to the root of the solution, and perform the following: 
 
 1. Publish the project to a folder:
