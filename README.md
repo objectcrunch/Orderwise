@@ -9,7 +9,7 @@
 
 <br />
 
-The solution include the release assets inside the `release.zip` which can be run by step `2` below.
+The solution includes the release assets inside the `release.zip` which can be run by step `2` below.
 
 To build and run the project, open a command prompt to the root of the solution, and perform the following: 
 
